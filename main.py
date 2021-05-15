@@ -49,9 +49,9 @@ def callback():
     signature = request.headers['X-Line-Signature']
 
     # get request body as text
-    body = request.get_data(as_text=True)
-    # app.logger.info("Request body: " + body)
-    app.logger.info("Request body: 固定メッセージ(test)")
+    #body = request.get_data(as_text=True)
+    body = "固定メッセージ(test)"
+    app.logger.info("Request body: " + body)
 
     # handle webhook body
     try:
