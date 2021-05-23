@@ -30,7 +30,8 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
-# Webhookからのリクエストをチェック
+# Webhookからのリクエストをチェック(LINEトークから)
+# LINEからはhttp://~/callbackに送信する設定になっている
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -47,6 +48,13 @@ def callback():
         abort(400)
 
     return 'OK'
+
+# Webhookからのリクエストをチェック(GASからのモーニング割り込み？)
+# GASからはhttp://~/morningに送信する設定になっている
+@app.route("/morning", methods=['POST'])
+def morning():
+    # MEMO 朝の定期実行コードを記述する
+    pass
 
 # LINEでMessageEvent（普通のメッセージを送信された場合）が起こった場合に実行
 # reply_messageの第一引数のevent.reply_tokenは、イベントの応答に用いるトークン
