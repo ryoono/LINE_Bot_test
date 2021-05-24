@@ -78,8 +78,7 @@ def message_text(event):
                                    template=ButtonsTemplate(
                                        thumbnail_image_url=profile.picture_url,
                                        title=profile.display_name,
-                                       text=f"User Id: {profile.user_id}\n"
-                                            f"Status Message: {status_msg}",
+                                       text=profile.user_id,
                                        actions=[MessageAction(label="成功", text="次は何を実装しましょうか？")]))
 
     line_bot_api.reply_message(event.reply_token, messages=messages)
