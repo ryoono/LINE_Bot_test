@@ -59,7 +59,8 @@ def callback():
 @app.route("/morning", methods=['POST'])
 def morning():
     # MEMO 朝の定期実行コードを記述する
-    line_bot_api.push_message(user_id, messages="おはよう")
+    messages = TextSendMessage(text=f"おはよう")
+    line_bot_api.push_message(user_id, messages=messages)
     
 
 # LINEでMessageEvent（普通のメッセージを送信された場合）が起こった場合に実行
