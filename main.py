@@ -21,11 +21,15 @@ app = Flask(__name__)
 # 環境変数を参照し変数に格納
 channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
 channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
+user_id = os.getenv('LINE_USER_ID', None)
 if channel_secret is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
     sys.exit(1)
 if channel_access_token is None:
     print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
+    sys.exit(1)
+if user_id is None:
+    print('Specify LINE_USER_ID as environment variable.')
     sys.exit(1)
 
 line_bot_api = LineBotApi(channel_access_token)
@@ -55,19 +59,20 @@ def callback():
 @app.route("/morning", methods=['POST'])
 def morning():
     # MEMO 朝の定期実行コードを記述する
-    pass
+    line_bot_api.push_message(user_id, messages="おはよう")
+    
 
 # LINEでMessageEvent（普通のメッセージを送信された場合）が起こった場合に実行
 # reply_messageの第一引数のevent.reply_tokenは、イベントの応答に用いるトークン
 # 第二引数には、linebot.modelsに定義されている返信用のTextSendMessageオブジェクト
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    # line_bot_api.reply_message(
-    #     event.reply_token,
-    #     #TextSendMessage(text=event.message.text)
-    #     TextSendMessage(text='固定メッセージテスト')
-    # )
-    profile = line_bot_api.get_profile(event.source.user_id)
+    line_bot_api.reply_message(
+        event.reply_token,
+        #TextSendMessage(text=event.message.text)
+        TextSendMessage(text='固定メッセージテスト')
+    )
+    # profile = line_bot_api.get_profile(event.source.user_id)
 
     # status_msg = profile.status_message
     # if status_msg != "None":
@@ -81,7 +86,7 @@ def message_text(event):
     #                                    text=profile.user_id,
     #                                    actions=[MessageAction(label="成功", text="次は何を実装しましょうか？")]))
 
-    line_bot_api.reply_message(event.reply_token, messages=profile.user_id)
+    # line_bot_api.reply_message(event.reply_token, messages=profile.user_id)
 
 
 if __name__ == "__main__":
