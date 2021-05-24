@@ -12,7 +12,8 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,
+    MessageEvent, TextMessage, TextSendMessage, MessageAction, TemplateSendMessage,
+    ButtonsTemplate
 )
 
 app = Flask(__name__)
@@ -61,11 +62,27 @@ def morning():
 # 第二引数には、linebot.modelsに定義されている返信用のTextSendMessageオブジェクト
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        #TextSendMessage(text=event.message.text)
-        TextSendMessage(text='固定メッセージテスト')
-    )
+    # line_bot_api.reply_message(
+    #     event.reply_token,
+    #     #TextSendMessage(text=event.message.text)
+    #     TextSendMessage(text='固定メッセージテスト')
+    # )
+    profile = line_bot_api.get_profile(event.source.user_id)
+
+    status_msg = profile.status_message
+    if status_msg != "None":
+        # LINEに登録されているstatus_messageが空の場合は、"なし"という文字列を代わりの値とする
+        status_msg = "なし"
+
+    messages = TemplateSendMessage(alt_text="Buttons template",
+                                   template=ButtonsTemplate(
+                                       thumbnail_image_url=profile.picture_url,
+                                       title=profile.display_name,
+                                       text=f"User Id: {profile.user_id[:5]}...\n"
+                                            f"Status Message: {status_msg}",
+                                       actions=[MessageAction(label="成功", text="次は何を実装しましょうか？")]))
+
+    line_bot_api.reply_message(event.reply_token, messages=messages)
 
 
 if __name__ == "__main__":
