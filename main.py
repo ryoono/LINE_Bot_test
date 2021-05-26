@@ -84,6 +84,8 @@ def message_text(event):
     # APIKEYの部分は自分のAPI鍵を代入してください
     url = 'https://www.chaplus.jp/v1/chat?apikey=' + chaplus_key
 
+    print(payload)
+    
     # APIを叩く
     res = requests.post(url=url, headers=headers, data=json.dumps(payload))
     print('output_res : ' + res.json()['bestResponse']['utterance'])
