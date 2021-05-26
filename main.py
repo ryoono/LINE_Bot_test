@@ -76,19 +76,19 @@ def morning():
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
 
-    print( event.message.text )
+    print( 'output_mess : ' + event.message.text )
 
     # リクエストに必要なパラメーター
     headers = {'content-type':'text/json'}
     payload = {'utterance':event.message.text}
-
+    print('output_pay : ' + payload)
     # APIKEYの部分は自分のAPI鍵を代入してください
     url = 'https://www.chaplus.jp/v1/chat?apikey=' + chaplus_key
 
     # APIを叩く
     res = requests.post(url=url, headers=headers, data=json.dumps(payload))
-    print(res)
-    
+    print('output_res : ' + res)
+
     line_bot_api.reply_message(
         event.reply_token,
         #TextSendMessage(text=event.message.text)
