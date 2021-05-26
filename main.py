@@ -35,6 +35,9 @@ if channel_access_token is None:
 if user_id is None:
     print('Specify LINE_USER_ID as environment variable.')
     sys.exit(1)
+if chaplus_key is None:
+    print('Specify chaplus_key as environment variable.')
+    sys.exit(1)
 
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
@@ -73,6 +76,8 @@ def morning():
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
 
+    print( event.message.text )
+
     # リクエストに必要なパラメーター
     headers = {'content-type':'text/json'}
     payload = {'utterance':event.message.text}
@@ -82,7 +87,8 @@ def message_text(event):
 
     # APIを叩く
     res = requests.post(url=url, headers=headers, data=json.dumps(payload))
-
+    print(res)
+    
     line_bot_api.reply_message(
         event.reply_token,
         #TextSendMessage(text=event.message.text)
