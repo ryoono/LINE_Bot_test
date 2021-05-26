@@ -80,8 +80,7 @@ def message_text(event):
 
     # リクエストに必要なパラメーター
     headers = {'content-type':'text/json'}
-    payload = {'utterance':event.message.text}
-    print('output_pay : ' + payload)
+    payload = {'utterance':'こんばんは'}
     # APIKEYの部分は自分のAPI鍵を代入してください
     url = 'https://www.chaplus.jp/v1/chat?apikey=' + chaplus_key
 
