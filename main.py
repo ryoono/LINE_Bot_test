@@ -79,14 +79,14 @@ def message_text(event):
     print( 'output_mess : ' + event.message.text )
 
     # リクエストに必要なパラメーター
-    headers = {'content-type':'text/json'}
+    headers = {'Content-Type':'application/json'}
     payload = {'utterance':'こんばんは'}
     # APIKEYの部分は自分のAPI鍵を代入してください
     url = 'https://www.chaplus.jp/v1/chat?apikey=' + chaplus_key
 
     # APIを叩く
     res = requests.post(url=url, headers=headers, data=json.dumps(payload))
-    print('output_res : ' + res)
+    print('output_res : ' + res.json()['bestResponse']['utterance'])
 
     line_bot_api.reply_message(
         event.reply_token,
