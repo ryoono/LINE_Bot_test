@@ -16,12 +16,16 @@ from linebot.models import (
     ButtonsTemplate
 )
 
+import requests
+import json
+
 app = Flask(__name__)
 
 # 環境変数を参照し変数に格納
 channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
 channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
 user_id = os.getenv('LINE_USER_ID', None)
+chaplus_key = os.environ.get("CHAPLUS_KEY")
 if channel_secret is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
     sys.exit(1)
@@ -68,10 +72,21 @@ def morning():
 # 第二引数には、linebot.modelsに定義されている返信用のTextSendMessageオブジェクト
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
+
+    # リクエストに必要なパラメーター
+    headers = {'content-type':'text/json'}
+    payload = {'utterance':event.message.text}
+
+    # APIKEYの部分は自分のAPI鍵を代入してください
+    url = 'https://www.chaplus.jp/v1/chat?apikey=' + CHAPLUS_KEY
+
+    # APIを叩く
+    res = requests.post(url=url, headers=headers, data=json.dumps(payload))
+
     line_bot_api.reply_message(
         event.reply_token,
         #TextSendMessage(text=event.message.text)
-        TextSendMessage(text='固定メッセージテスト')
+        TextSendMessage(text=res.json()['bestResponse']['utterance'])
     )
     # profile = line_bot_api.get_profile(event.source.user_id)
 
