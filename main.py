@@ -78,7 +78,7 @@ def message_text(event):
     payload = {'utterance':event.message.text}
 
     # APIKEYの部分は自分のAPI鍵を代入してください
-    url = 'https://www.chaplus.jp/v1/chat?apikey=' + CHAPLUS_KEY
+    url = 'https://www.chaplus.jp/v1/chat?apikey=' + chaplus_key
 
     # APIを叩く
     res = requests.post(url=url, headers=headers, data=json.dumps(payload))
